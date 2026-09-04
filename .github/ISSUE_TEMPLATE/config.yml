@@ -1,5 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Security report
-    url: https://github.com/lamryQAQ-2nd/prompt-paste/security/advisories/new
-    about: Report security-sensitive findings privately. Do not open a public issue.
