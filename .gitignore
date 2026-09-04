@@ -1,0 +1,18 @@
+.DS_Store
+Thumbs.db
+
+# Local tooling and test output
+node_modules/
+coverage/
+.tmp-*
+docs/assets/.demo-frame-dir
+
+# Packaged extension artifacts
+*.crx
+*.zip
+
+# Never commit private extension-signing material
+*.pem
+*.p12
+*.pfx
+*.key

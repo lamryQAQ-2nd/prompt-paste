@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Prompt paste",
+  "version": "1.0.0",
+  "description": "A local-first right-click Prompt manager with compressed Chrome Sync.",
+  "minimum_chrome_version": "102",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoJ9gXsGq0ssYQL7v5SyKRi8pAMtKy/FnqkAyFcgcrMu6NenoTV8toe4BtorPtvN7TAuVjuqohFnNpE4Z89vU2IXnDXOWZh/nU04OFJWQB2PAoc71JFea09h1eI515R1g0zkjw5Yqbsw3/Pmz2LbSQwy3uYjdnGJxj+cjX97waEDK7sGQ7fHJzDj1WBwHZdHu3ih2YJS58wpRc0nDkDy4iGgJNhMtVElLJ3RVC7jY+IyMiHBtyz8tbL5vGqE26z+gqVYTJ7JNwMbeiN/1rNTAiuVThpfxJRTVeCsHT9vByICmMBDVBSldiTfaYtAhruYwANif6dcc8lkbawftPdbh1QIDAQAB",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage",
+    "scripting",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Open Prompt paste",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  }
+}

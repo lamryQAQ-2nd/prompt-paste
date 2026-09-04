@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt paste</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <img class="brand-mark" src="icons/icon-48.png" alt="">
+        <div>
+          <h1>Prompt paste</h1>
+          <p>Keep your Prompts close, private, and ready to paste.</p>
+        </div>
+      </div>
+      <div class="header-actions" aria-label="Synchronization controls">
+        <button class="button button-primary" id="syncButton" type="button">Sync to cloud</button>
+        <button class="button" id="pullButton" type="button">Force pull from cloud</button>
+        <button class="button button-quiet" id="retryButton" type="button">Retry pending</button>
+        <button class="button button-quiet" id="gcButton" type="button">Clean expired tombstones</button>
+      </div>
+    </header>
+
+    <section class="storage-card" aria-labelledby="storageTitle">
+      <div class="storage-main">
+        <div class="storage-heading">
+          <div>
+            <p class="eyebrow">Chrome Sync</p>
+            <h2 id="storageTitle">Sync storage</h2>
+          </div>
+          <p class="storage-number" id="storageNumber">0 B used · 100 KB available</p>
+        </div>
+        <div class="global-progress" role="progressbar" aria-label="Chrome Sync storage used" aria-valuemin="0" aria-valuemax="102400" aria-valuenow="0" id="globalProgress">
+          <div class="global-progress-projected" id="projectedBar"></div>
+          <div class="global-progress-actual" id="actualBar"></div>
+        </div>
+        <div class="storage-legend">
+          <span><i class="legend-dot legend-actual"></i>Actual <strong id="actualLegend">0 B</strong></span>
+          <span><i class="legend-dot legend-projected"></i>Projected <strong id="projectedLegend">0 B</strong></span>
+        </div>
+      </div>
+      <dl class="storage-details">
+        <div><dt>Sync items</dt><dd id="itemUsage">0 / 512</dd></div>
+        <div><dt>Tombstones</dt><dd id="tombstoneUsage">0 · 0 ready</dd></div>
+        <div><dt>Local storage</dt><dd id="localUsage">0 B / 10 MB</dd></div>
+        <div><dt>Pending changes</dt><dd id="pendingUsage">0</dd></div>
+        <div><dt>Last sync</dt><dd id="lastSync">Not yet</dd></div>
+        <div><dt>Last cleanup</dt><dd id="lastGc">Not yet</dd></div>
+      </dl>
+    </section>
+
+    <div class="status-banner" id="statusBanner" role="status" hidden></div>
+
+    <main class="workspace">
+      <aside class="sidebar" aria-label="Prompt categories">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Library</p>
+            <h2>Categories</h2>
+          </div>
+          <span class="count-pill" id="categoryCount">0</span>
+        </div>
+        <form class="add-category" id="categoryForm">
+          <label class="sr-only" for="categoryName">New category name</label>
+          <input id="categoryName" name="categoryName" maxlength="120" placeholder="New category" autocomplete="off" required>
+          <button class="icon-button add-icon" type="submit" aria-label="Add category" title="Add category">+</button>
+        </form>
+        <div class="category-list" id="categoryList"></div>
+      </aside>
+
+      <section class="editor-panel">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-orbit" aria-hidden="true"><span>⌘</span></div>
+          <h2>Create your first category</h2>
+          <p>Group reusable Prompts by purpose, then paste them from any editable field’s context menu.</p>
+        </div>
+
+        <div id="categoryEditor" hidden>
+          <div class="editor-heading">
+            <div>
+              <p class="eyebrow">Selected category</p>
+              <h2 id="selectedCategoryName"></h2>
+              <p class="editor-subtitle" id="selectedCategoryMeta"></p>
+            </div>
+            <div class="editor-actions">
+              <button class="button button-quiet" id="renameCategoryButton" type="button">Rename</button>
+              <button class="button button-danger-quiet" id="deleteCategoryButton" type="button">Delete category</button>
+              <button class="button button-primary" id="addPromptButton" type="button">Add Prompt</button>
+            </div>
+          </div>
+
+          <section class="conflict-card" id="conflictCard" hidden>
+            <div>
+              <strong>Cloud deletion needs review</strong>
+              <p>This category was deleted in the cloud, but this device has offline changes.</p>
+            </div>
+            <div class="conflict-actions">
+              <button class="button button-primary" id="keepLocalButton" type="button">Keep local and restore to cloud</button>
+              <button class="button" id="acceptDeleteButton" type="button">Accept cloud deletion</button>
+            </div>
+          </section>
+
+          <div class="prompt-list" id="promptList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <template id="promptTemplate">
+    <article class="prompt-card">
+      <div class="prompt-summary">
+        <button class="prompt-open" type="button">
+          <span class="prompt-summary-copy">
+            <strong class="prompt-summary-title"></strong>
+            <span class="prompt-summary-preview"></span>
+          </span>
+          <span class="prompt-summary-size"></span>
+        </button>
+        <div class="prompt-summary-actions">
+          <button class="button button-quiet prompt-edit" type="button">Edit</button>
+          <button class="icon-button prompt-delete" type="button" aria-label="Delete Prompt" title="Delete Prompt">×</button>
+        </div>
+      </div>
+      <div class="prompt-editor" hidden>
+        <label class="field prompt-title-field">
+          <span>Title</span>
+          <input class="prompt-title" maxlength="200" autocomplete="off" placeholder="Prompt title">
+        </label>
+        <label class="field">
+          <span>Prompt</span>
+          <textarea class="prompt-content" rows="6" placeholder="Write the text you want to insert…"></textarea>
+        </label>
+        <div class="prompt-footer">
+          <span class="prompt-size"></span>
+          <div class="prompt-editor-actions">
+            <button class="button button-quiet prompt-cancel" type="button">Cancel</button>
+            <button class="button button-primary prompt-save" type="button">Save Prompt</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="vendor/lz-string.min.js"></script>
+  <script src="storage.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
