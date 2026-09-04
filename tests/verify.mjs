@@ -87,9 +87,15 @@ assert.match(background, /chrome\.storage\.sync\.set\(payload\)/);
 assert.match(background, /chrome\.storage\.sync\.remove\(syncKeys\)/);
 assert.doesNotMatch(background, /for\s*\([^)]*\)[\s\S]{0,160}chrome\.storage\.sync\.set\s*\(/);
 
-for (const file of ["manifest.json", "background.js", "content.js", "storage.js", "options.html", "options.css", "options.js", "README.md"]) {
+for (const file of ["manifest.json", "background.js", "content.js", "storage.js", "options.html", "options.css", "options.js"]) {
   assert.doesNotMatch(read(file), /[\u3400-\u9fff]/, `${file} contains non-English product text`);
 }
+
+const readme = read("README.md");
+assert.match(readme, /<details>/);
+assert.match(readme, /简体中文/);
+assert.match(readme, /## 安装/);
+assert.match(readme, /## Install/);
 
 console.log("Verification passed.");
 console.log(`Fixed extension ID: ${extensionId}`);
