@@ -16,6 +16,3 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Durable retries, quota visibility, deletion tombstones, and offline conflict handling.
 - Options page for category and Prompt management.
 - Automated static, mock-background, and real-Chrome smoke checks.
-
-[Unreleased]: https://github.com/lamryQAQ-2nd/prompt-paste/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/lamryQAQ-2nd/prompt-paste/releases/tag/v1.0.0
